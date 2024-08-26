@@ -1,8 +1,9 @@
 # Setup & compilation
-## Initial setup
+## Initial setup (Windows 10)
 Firstly, you should to find out the maximum supported version of CUDA on your computer. You can do this using the command:
 `nvidia-smi`  
 As you can see, you can use up to version 12.6 on my computer, but I installed an earlier version 11.8 to avoid problems of new versions:                                      ![Описание изображения](./imgs/smi.png)
+
 You also need to check that you haven't installed CUDA yet:
 `nvcc --version`
 it should show that it was not installed where.
@@ -43,3 +44,10 @@ Now you can compile .cu files. To do this, you need to know the paths to the lib
 nvcc -o Mandelbrot_CUDA Mandelbrot_CUDA.cu -I"C:/SFML/SFML-2.6.1_VS_64/include" -L"C:/SFML/SFML-2.6.1_VS_64/lib" -lsfml-graphics -lsfml-window -lsfml-system --allow-unsupported-compiler --expt-relaxed-constexpr -arch=sm_50
 ```
 To compile regular .cpp files, you can use any of your favorite c++ compiler and link libraries in the same way.
+
+## Compilation
+You can compile the entire project using the command (specify the paths to the SFML library according to your installation):
+```
+nvcc -o fractal_CUDA src/main.cu src/general.cu src/Mandelbrot.cu src/Burning_ship.cu src/Sierpinski.cu src/Koch.cu src/Julia.cu -I./include -I"C:/SFML/SFML-2.6.1_VS_64/include" -L"C:/SFML/SFML-2.6.1_VS_64/lib" -lsfml-graphics -lsfml-window -lsfml-system --allow-unsupported-compiler --expt-relaxed-constexpr -arch=sm_50
+```
+To generate various fractals, it is enough to uncomment the necessary lines of draw functions in the `main.cu` code.

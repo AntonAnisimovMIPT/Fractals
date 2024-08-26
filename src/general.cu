@@ -20,3 +20,21 @@ void draw_fractal(sf::Image &image, float offset_X, float offset_Y, float scale,
     image.create(width_window, height_window, pixels);
     delete[] pixels;
 }
+
+void draw_fractal_with_depth(sf::Image &image, int depth, void (*fractal_kernel)(sf::Uint8*, int)) {
+    sf::Uint8* pixels = new sf::Uint8[width_window * height_window * 4];
+    sf::Uint8* d_pixels;
+
+    cudaMalloc(&d_pixels, width_window * height_window * 4 * sizeof(sf::Uint8));
+    dim3 blockSize(16, 16);
+    dim3 gridSize((width_window + blockSize.x - 1) / blockSize.x, (height_window + blockSize.y - 1) / blockSize.y);
+
+    fractal_kernel<<<gridSize, blockSize>>>(d_pixels, depth);
+    cudaDeviceSynchronize();
+
+    cudaMemcpy(pixels, d_pixels, width_window * height_window * 4 * sizeof(sf::Uint8), cudaMemcpyDeviceToHost);
+    cudaFree(d_pixels);
+
+    image.create(width_window, height_window, pixels);
+    delete[] pixels;
+}

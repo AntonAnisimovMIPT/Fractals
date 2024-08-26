@@ -10,4 +10,7 @@ __device__ const int number_iterations = 100;
 void draw_fractal(sf::Image &image, float offset_X, float offset_Y, float scale, 
                   void (*fractal_kernel)(sf::Uint8*, float, float, float));
 
-#endif // GENERAL_H
+void draw_fractal_with_depth(sf::Image &image, int depth, 
+                    void (*fractal_kernel)(sf::Uint8*, int));
+
+#endif
